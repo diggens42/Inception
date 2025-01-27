@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  nginx:
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - ./requirements/nginx/conf:/etc/nginx/conf.d
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://localhost/healthcheck"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+      start_period: 10s

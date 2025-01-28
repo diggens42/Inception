@@ -2,7 +2,7 @@ NAME = fwahl_inception
 
 
 up:
-	docker-compose -p $(NAME) -f srcs/docker-compose.yml up --build
+	docker-compose -p $(NAME) -f srcs/docker-compose.yml up --build -d
 
 down:
 	docker-compose -p $(NAME) -f srcs/docker-compose.yml down

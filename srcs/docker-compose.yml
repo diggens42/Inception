@@ -10,8 +10,6 @@ services:
     #   - wordpress
     ports:
       - "443:443"
-    # volumes:
-    #   - ./requirements/nginx/conf:/etc/nginx/conf.d
     volumes:
       - ./wordpress_vol:/var/www/html
     restart: always
@@ -69,6 +67,5 @@ services:
 volumes:
     mariadb_vol:
       driver: local
-
-#   wordpress_data:
-#     driver: local
+    wordpress_vol:
+      driver: local

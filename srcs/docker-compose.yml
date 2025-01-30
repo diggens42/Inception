@@ -6,19 +6,21 @@ services:
       context: ./requirements/nginx
       dockerfile: Dockerfile
     container_name: nginx
-    # depends_on:
-    #   - wordpress
+    depends_on:
+      - wordpress
     ports:
       - "443:443"
     volumes:
-      - ./wordpress_vol:/var/www/html
-    restart: always
+      - wordpress_vol:/var/www/html
+    restart: on-failure
     healthcheck:
       test: ["CMD", "curl", "-f", "https://localhost/healthcheck"]
       interval: 30s
       retries: 3
       timeout: 10s
       start_period: 10s
+    networks:
+      - diggens
 
   mariadb:
     build:
@@ -34,38 +36,48 @@ services:
       - MARIADB_DATABASE=wordpress
       - MARIADB_USER=wordpress
       - MARIADB_PASSWORD=wordpress
-    restart: always
+    restart: on-failure
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 30s
       retries: 3
       timeout: 10s
+    networks:
+      - diggens
 
-
-#   wordpress:
-#     build:
-#       context: ./requirements/wordpress
-#       dockerfile: Dockerfile
-#     container_name: wordpress
-#     ports:
-#       - "9000:9000"
-#     volumes:
-#       - wordpress_vol:/var/www/html
-#     environment:
-#       - WORDPRESS_DB_HOST=localhost  #update when adding MariaDB
-#       - WORDPRESS_DB_NAME=wordpress
-#       - WORDPRESS_DB_USER=root
-#       - WORDPRESS_DB_PASSWORD=root_password  # Change as needed
-#     restart: always
-#     healthcheck:
-#       test: ["CMD", "curl", "-f", "http://localhost:9000/"]
-#       interval: 30s
-#       retries: 3
-#       timeout: 10s
-#       start_period: 10s
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "9000:9000"
+    volumes:
+      - wordpress_vol:/var/www/html
+    environment:
+      - WORDPRESS_DB_HOST=mariadb
+      - WORDPRESS_DB_NAME=wordpress
+      - WORDPRESS_DB_USER=wordpress
+      - WORDPRESS_DB_PASSWORD=wordpress
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/"]
+      interval: 30s
+      retries: 3
+      timeout: 10s
+      start_period: 10s
+    networks:
+      - diggens
 
 volumes:
     mariadb_vol:
       driver: local
     wordpress_vol:
       driver: local
+
+networks:
+  diggens:
+    driver: bridge

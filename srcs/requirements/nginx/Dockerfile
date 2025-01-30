@@ -11,6 +11,8 @@ COPY conf/nginx.conf /etc/nginx/nginx.conf
 COPY conf/cert.pem /etc/nginx/ssl/cert.pem
 COPY conf/key.pem /etc/nginx/ssl/key.pem
 
+RUN chown -R www-data:www-data /etc/nginx/ssl
+
 EXPOSE 443
 
 CMD ["nginx", "-g", "daemon off;"]

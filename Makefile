@@ -1,24 +1,33 @@
 NAME = fwahl_inception
-
+COMPOSE = docker-compose -p $(NAME) -f srcs/docker-compose.yml
 
 up:
-	docker-compose -p $(NAME) -f srcs/docker-compose.yml up --build -d
+	$(COMPOSE) up --build -d
 
 down:
-	docker-compose -p $(NAME) -f srcs/docker-compose.yml down
+	$(COMPOSE) down
 
 start:
-	docker-compose -p $(NAME) -f srcs/docker-compose.yml start
+	$(COMPOSE) start
 
 stop:
-	docker-compose -p $(NAME) -f srcs/docker-compose.yml stop
+	$(COMPOSE) stop
 
 restart:
 	$(MAKE) stop
 	$(MAKE) up
 
 clean:
-	docker-compose -p $(NAME) -f srcs/docker-compose.yml down --volumes --remove-orphans
+	$(COMPOSE) down --volumes --remove-orphans
 	docker system prune --force --volumes
 
 re: clean up
+
+mariadb:
+	$(COMPOSE) up -d mariadb
+
+nginx:
+	$(COMPOSE) up -d nginx
+
+wordpress:
+	$(COMPOSE) up -d wordpress

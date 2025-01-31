@@ -1,40 +1,34 @@
 FROM debian:bullseye-slim
 
-ENV WORDPRESS_VERSION=6.3.2
-
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     curl \
-    # php \
-    php-fpm \
-    php-mysql \
-    php-cgi \
-    php-gd \
-    php-curl \
-    php-xml \
-    php-mbstring \
-    php-zip \
-    php-intl \
+    php7.4-fpm \
+    php7.4-mysql \
+    php7.4-cgi \
+    php7.4-gd \
+    php7.4-curl \
+    php7.4-xml \
+    php7.4-mbstring \
+    php7.4-zip \
+    php7.4-intl \
     mariadb-client \
     unzip \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz && \
-    tar -xzf wordpress-${WORDPRESS_VERSION}.tar.gz && \
-    rm wordpress-${WORDPRESS_VERSION}.tar.gz && \
-    mkdir -p /var/www/html && \
-    mv wordpress /var/www/html
+RUN mkdir -p /var/www/html
 
-
-# RUN mkdir -p /tools && \
-#     cp /var/www/html/wp-config-sample.php /tools/www.config
-
-WORKDIR /var/www/html
+RUN wget https://wordpress.org/latest.tar.gz && \
+    tar -xzf latest.tar.gz -C /var/www/html --strip-components=1 && \
+    rm latest.tar.gz
 
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
+RUN mkdir -p /run/php
+
 EXPOSE 9000
 
-CMD ["php", "-S", "0.0.0.0:80", "-t", "/var/www/html"]
+CMD ["php-fpm7.4", "--nodaemonize"]
+

@@ -30,5 +30,10 @@ RUN mkdir -p /run/php
 
 EXPOSE 9000
 
+COPY tools/docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
 CMD ["php-fpm7.4", "--nodaemonize"]
 

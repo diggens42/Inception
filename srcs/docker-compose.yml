@@ -13,12 +13,12 @@ services:
     volumes:
       - wordpress_vol:/var/www/html
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "https://localhost/healthcheck"]
-      interval: 30s
-      retries: 3
-      timeout: 10s
-      start_period: 10s
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "https://localhost/healthcheck"]
+    #   interval: 30s
+    #   retries: 3
+    #   timeout: 10s
+    #   start_period: 10s
     networks:
       - diggens
 

@@ -7,12 +7,12 @@ RUN apt-get update && \
 
 RUN mkdir -p /etc/ssl/certs /etc/ssl/private
 
-COPY conf/cert.pem /etc/ssl/certs/cert.pem
-COPY conf/key.pem /etc/ssl/private/key.pem
+COPY conf/nginx.crt /etc/ssl/certs/nginx.crt
+COPY conf/nginx.key /etc/ssl/private/nginx.key
 
-RUN chmod 644 /etc/ssl/certs/cert.pem
-RUN chmod 640 /etc/ssl/private/key.pem
-RUN chown root:www-data /etc/ssl/private/key.pem
+RUN chmod 644 /etc/ssl/certs/nginx.crt
+RUN chmod 640 /etc/ssl/private/nginx.key
+RUN chown root:www-data /etc/ssl/private/nginx.key
 
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html

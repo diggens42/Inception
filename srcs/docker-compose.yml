@@ -31,11 +31,8 @@ services:
       - "3306:3306"
     volumes:
       - mariadb_vol:/var/lib/mysql
-    environment:
-      - MARIADB_ROOT_PASSWORD=root
-      - MARIADB_DATABASE=wordpress
-      - MARIADB_USER=wordpress
-      - MARIADB_PASSWORD=wordpress
+    env_file:
+      - ../secrets/.env
     restart: on-failure
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
@@ -57,11 +54,8 @@ services:
       - "9000:9000"
     volumes:
       - wordpress_vol:/var/www/html
-    environment:
-      - WORDPRESS_DB_HOST=mariadb
-      - WORDPRESS_DB_NAME=wordpress
-      - WORDPRESS_DB_USER=wordpress
-      - WORDPRESS_DB_PASSWORD=wordpress
+    env_file:
+      - ../secrets/.env
     restart: on-failure
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/"]

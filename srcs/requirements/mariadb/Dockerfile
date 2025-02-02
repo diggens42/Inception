@@ -1,13 +1,9 @@
 FROM debian:bullseye-slim
 
-ENV MARIADB_VERSION=10.5 \
-    MARIADB_DATABASE=wordpress \
-    MARIADB_USER=wordpress \
-    MARIADB_PASSWORD=wordpress \
-    MARIADB_ROOT_PASSWORD=root
+ARG MARIADB_VERSION=10.5
 
 RUN apt-get update && \
-    apt-get install -y mariadb-server-$MARIADB_VERSION && \
+    apt-get install -y mariadb-server-${MARIADB_VERSION} && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

@@ -18,5 +18,6 @@ RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
 EXPOSE 443
+EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

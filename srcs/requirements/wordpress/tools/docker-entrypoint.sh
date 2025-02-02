@@ -1,20 +1,17 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
-chown -R www-data:www-data /var/www/html
-chmod -R 755 /var/www/html
-
-
 echo "Waiting for MariaDB to be ready..."
-while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" --silent; do
-    sleep 2
+until mysqladmin ping -h"$WORDPRESS_DB_HOST" --silent; do
+    sleep 1
 done
 
-if ! wp core is-installed --allow-root; then
-    echo "Installing WordPress..."
-    wp core install --url="${WORDPRESS_URL}" --title="${WORDPRESS_TITLE}" \
-        --admin_user="${WORDPRESS_ADMIN_USER}" --admin_password="${WORDPRESS_ADMIN_PASSWORD}" \
-        --admin_email="${WORDPRESS_ADMIN_EMAIL}" --allow-root
+echo "MariaDB is up! Setting up WordPress..."
+
+if [ ! -f /var/www/html/wp-config.php ]; then
+    echo "wp-config.php not found! Creating from template..."
+    envsubst < /var/www/html/tools/wp-config.php > /var/www/html/wp-config.php
 fi
 
-exec "$@"
+echo "Starting WordPress..."
+exec php-fpm

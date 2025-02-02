@@ -28,6 +28,8 @@ RUN chown -R www-data:www-data /var/www/html && \
 
 RUN mkdir -p /run/php
 
+COPY tools/wp-config.php /var/www/html/wp-config.php
+
 EXPOSE 9000
 
 COPY tools/docker-entrypoint.sh /usr/local/bin/

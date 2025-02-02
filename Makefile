@@ -1,5 +1,5 @@
-NAME = fwahl_inception
-COMPOSE = docker-compose -p $(NAME) -f srcs/docker-compose.yml
+NAME = inception
+COMPOSE = docker-compose --env-file secrets/.env -f srcs/docker-compose.yml
 
 up:
 	$(COMPOSE) up --build -d
@@ -14,7 +14,7 @@ stop:
 	$(COMPOSE) stop
 
 restart:
-	$(MAKE) stop
+	$(MAKE) down
 	$(MAKE) up
 
 clean:

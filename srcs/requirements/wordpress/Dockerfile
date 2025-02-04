@@ -24,25 +24,20 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 
 RUN mkdir -p /var/www/html
 
-# RUN wget https://wordpress.org/latest.tar.gz && \
-#     tar -xzf latest.tar.gz -C /var/www/html --strip-components=1 && \
-#     rm latest.tar.gz
-
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
 RUN mkdir -p /run/php
 
-# COPY tools/wp-config.php /var/www/html/wp-config.php
-
 EXPOSE 9000
 
+WORKDIR /var/www/html
 
 COPY tools/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 COPY tools/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["php-fpm7.4", "--nodaemonize"]
-

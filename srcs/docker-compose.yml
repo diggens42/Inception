@@ -13,7 +13,7 @@ services:
       - "443:443"
       - "80:80"
     volumes:
-      - wordpress_vol:/var/www/html
+      - ./data/wordpress_vol:/var/www/html
       - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
     restart: on-failure
     healthcheck:
@@ -35,7 +35,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mariadb_vol:/var/lib/mysql
+      - ./data/mariadb_vol:/var/lib/mysql
     restart: on-failure
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password", "--silent"]
@@ -58,30 +58,32 @@ services:
     ports:
       - "9000:9000"
     volumes:
-      - wordpress_vol:/var/www/html
+      - ./data/wordpress_vol:/var/www/html
     restart: on-failure
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:9000/"]
-    #   interval: 30s
-    #   retries: 3
-    #   timeout: 10s
-    #   start_period: 10s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/"]
+      interval: 35s
+      retries: 3
+      timeout: 10s
+      start_period: 10s
     networks:
       - diggens
 
-volumes:
-    mariadb_vol:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: /Users/fwahl/code/Inception/data/maria_db
-    wordpress_vol:
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: /Users/fwahl/code/Inception/data/wordpress
+# volumes:
+#     mariadb_vol:
+#       name: mariadb_vol
+#       driver: local
+#       driver_opts:
+#         type: none
+#         o: bind
+#         device: /Users/fwahl/code/Inception/data/maria_db
+#     wordpress_vol:
+#       name: wordpress_vol
+#       driver: local
+#       driver_opts:
+#         type: none
+#         o: bind
+#         device: /Users/fwahl/code/Inception/data/wordpress
 
 networks:
   diggens:

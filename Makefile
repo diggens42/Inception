@@ -21,6 +21,9 @@ clean:
 	$(COMPOSE) down --volumes --remove-orphans
 	docker system prune -af --volumes
 
+fclean: clean
+	rm -rf srcs/data
+
 re: clean up
 
 mariadb:
@@ -31,3 +34,6 @@ nginx:
 
 wordpress:
 	$(COMPOSE) up -d wordpress
+
+logs:
+	$(COMPOSE) logs

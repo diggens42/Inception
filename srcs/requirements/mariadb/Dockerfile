@@ -3,7 +3,7 @@ FROM debian:bullseye-slim
 ARG MARIADB_VERSION=10.5
 
 RUN apt-get update && \
-    apt-get install -y mariadb-server-${MARIADB_VERSION} && \
+    apt-get install -y mariadb-server-${MARIADB_VERSION} coreutils && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir -p /run/mysqld && \
@@ -19,4 +19,8 @@ EXPOSE 3306
 VOLUME ["/var/lib/mysql"]
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+# CMD ["tail", "-f", "/dev/null"]
+
+
 CMD ["mysqld"]

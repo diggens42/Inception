@@ -1,5 +1,5 @@
 NAME = inception
-COMPOSE = docker-compose --env-file secrets/.env -f srcs/docker-compose.yml
+COMPOSE = docker compose -f srcs/docker-compose.yml
 
 up:
 	$(COMPOSE) up --build -d
@@ -19,7 +19,7 @@ restart:
 
 clean:
 	$(COMPOSE) down --volumes --remove-orphans
-	docker system prune --force --volumes
+	docker system prune -af --volumes
 
 re: clean up
 

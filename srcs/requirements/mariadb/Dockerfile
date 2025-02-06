@@ -1,26 +1,25 @@
 FROM debian:bullseye-slim
 
-ARG MARIADB_VERSION=10.5
 
 RUN apt-get update && \
-    apt-get install -y mariadb-server-${MARIADB_VERSION} coreutils && \
+    apt-get install -y mariadb-server coreutils tini && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /run/mysqld && \
-    chown mysql:mysql /run/mysqld
+    rm -rf /var/lib/apt/lists/*
 
 COPY tools/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
-# COPY tools/my.cnf /etc/mysql/my.cnf
-COPY tools/docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY tools/docker-entrypoint.sh /docker-entrypoint-initdb.d/docker-entrypoint.sh
+
+RUN chmod +x /docker-entrypoint-initdb.d/docker-entrypoint.sh
+RUN mkdir -p /run/mysqld && chown mysql:mysql /run/mysqld
 
 EXPOSE 3306
 
 VOLUME ["/var/lib/mysql"]
 
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT [ "/usr/bin/tini", "--" ]
+# ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
-# CMD ["tail", "-f", "/dev/null"]
+
+CMD ["/docker-entrypoint-initdb.d/docker-entrypoint.sh"]
 
 
-CMD ["mysqld"]

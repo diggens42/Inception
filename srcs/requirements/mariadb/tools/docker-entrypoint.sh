@@ -1,46 +1,31 @@
 #!/bin/bash
 set -e
 
-if [ ! -d "/var/lib/mysql/mysql" ]; then
+chown -R mysql:mysql /run/mysqld
+
+if [ ! -d "/var/lib/mysql/${DB_DATABASE}" ]; then
     echo "Initializing MariaDB data directory..."
-    mariadb-install-db --user=mysql --datadir=/var/lib/mysql
-    echo "MariaDB data directory initialized."
+    mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null
 
-    # mysqld --skip-networking --user=mysql --datadir=/var/lib/mysql &
-    # pid="$!"
+    mysqld_safe &
+    pid="$!"
 
-    # echo "Waiting for MariaDB to start..."
-    # while ! mariadb -uroot -e "SELECT 1;" &>/dev/null; do
-    #     sleep 1
-    # done
+    until mysqladmin ping --silent; do
+        sleep 1
+    done
 
-    # echo "Setting up initial database and users..."
+    echo "Setting root password..."
+    mysqladmin -u root password "${DB_ROOT_PASSWORD}"
 
-    # Set root password and create user
-    mysqld --skip-networking --user=mysql --datadir=/var/lib/mysql <<-EOSQL
-        CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\`;
-        ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
-        CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_USER_PASSWORD}';
-        GRANT ALL PRIVILEGES ON *.* TO '${DB_USER}'@'%' WITH GRANT OPTION;
-        FLUSH PRIVILEGES;
-EOSQL
+    echo "Creating WordPress database and user..."
+    mysql -uroot -p"${DB_ROOT_PASSWORD}" <<EOF
+CREATE DATABASE IF NOT EXISTS \`${DB_DATABASE}\`;
+CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_USER_PASSWORD}';
+GRANT ALL PRIVILEGES ON \`${DB_DATABASE}\`.* TO '${DB_USER}'@'%';
+FLUSH PRIVILEGES;
+EOF
 
-    # Ensure WordPress user exists and can connect from any host
-#     if [ -n "$MARIADB_USER" ] && [ -n "$MARIADB_USER_PASSWORD" ]; then
-#         echo "Creating user: $MARIADB_USER"
-#         mariadb -uroot -p"${MARIADB_ROOT_PASSWORD}" <<-EOSQL
-#             DROP USER IF EXISTS '$MARIADB_USER'@'localhost';
-#             DROP USER IF EXISTS '$MARIADB_USER'@'%';
-#             CREATE USER '$MARIADB_USER'@'%' IDENTIFIED BY '$MARIADB_PASSWORD';
-#             GRANT ALL PRIVILEGES ON \`$MARIADB_DATABASE\`.* TO '$MARIADB_USER'@'%';
-#             FLUSH PRIVILEGES;
-# EOSQL
-#     fi
-
-    echo "Database setup completed."
-    echo "Shutting down MariaDB..."
-    # kill "$pid"
-    # wait "$pid"
+    mysqladmin shutdown
 fi
 
-exec mysqld --user=mysql --datadir=/var/lib/mysql
+exec mysqld

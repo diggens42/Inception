@@ -52,7 +52,7 @@ services:
       - ./data/wordpress_vol:/var/www/html
     restart: on-failure
     healthcheck:
-      test: ["CMD", "bash", "-c", "nc -z localhost 9000 || exit 1"]
+      test: ["CMD", "pgrep", "-x", "php-fpm7.4"]
       interval: 33s
       retries: 5
       timeout: 10s

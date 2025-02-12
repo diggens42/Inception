@@ -7,17 +7,19 @@ RUN apt-get update && \
 
 RUN mkdir -p /etc/ssl/certs /etc/ssl/private
 
-COPY conf/nginx.crt /etc/ssl/certs/nginx.crt
-COPY conf/nginx.key /etc/ssl/private/nginx.key
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/ssl/private/nginx.key \
+    -out /etc/ssl/certs/nginx.crt \
+    -subj "/CN=localhost"
 
-RUN chmod 644 /etc/ssl/certs/nginx.crt
-RUN chmod 640 /etc/ssl/private/nginx.key
-RUN chown root:www-data /etc/ssl/private/nginx.key
+RUN chmod 644 /etc/ssl/certs/nginx.crt && \
+    chmod 640 /etc/ssl/private/nginx.key && \
+    chown root:www-data /etc/ssl/private/nginx.key
 
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
 EXPOSE 443
-EXPOSE 80
+# EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

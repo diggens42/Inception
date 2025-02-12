@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-sleep 50  # Wait for database
+sleep 33
 
 if [ ! -f /var/www/html/index.php ]; then
     echo "WordPress not found. Downloading..."

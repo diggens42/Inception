@@ -14,7 +14,6 @@ services:
       WP_ADMIN_EMAIL: abc@gmail.com
     ports:
       - "443:443"
-      - "80:80"
     volumes:
       - ./data/wordpress_vol:/var/www/html
       - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf

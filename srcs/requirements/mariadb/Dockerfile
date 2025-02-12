@@ -12,13 +12,11 @@ COPY tools/docker-entrypoint.sh /docker-entrypoint-initdb.d/docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint-initdb.d/docker-entrypoint.sh
 RUN mkdir -p /run/mysqld && chown mysql:mysql /run/mysqld
 
-EXPOSE 3306
+# EXPOSE 3306
 
 VOLUME ["/var/lib/mysql"]
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
-# ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
 
 CMD ["/docker-entrypoint-initdb.d/docker-entrypoint.sh"]
 

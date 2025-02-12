@@ -29,7 +29,7 @@ RUN chown -R www-data:www-data /var/www/html && \
 
 RUN mkdir -p /run/php
 
-EXPOSE 9000
+# EXPOSE 9000
 
 WORKDIR /var/www/html
 

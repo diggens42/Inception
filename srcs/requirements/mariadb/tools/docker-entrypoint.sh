@@ -3,7 +3,12 @@ set -e
 
 chown -R mysql:mysql /run/mysqld
 
+
 if [ ! -d "/var/lib/mysql/${DB_DATABASE}" ]; then
+    while [ ! -f /run/secrets/db_root_password ]; do sleep 1; done
+    DB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password | tr -d '\n\r')
+    while [ ! -f /run/secrets/db_user_password ]; do sleep 1; done
+    DB_USER_PASSWORD=$(cat /run/secrets/db_user_password | tr -d '\n\r')
     echo "Initializing MariaDB data directory..."
     mariadb-install-db --user=mysql --datadir=/var/lib/mysql >/dev/null
 
@@ -15,9 +20,9 @@ if [ ! -d "/var/lib/mysql/${DB_DATABASE}" ]; then
     done
 
     echo "Setting root password..."
-    # mysqladmin -u root password "${DB_ROOT_PASSWORD}"
-    mysql -uroot <<EOF
-    ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
+    mysql -uroot -p "" <<EOF
+    FLUSH PRIVILEGES;
+    ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('${DB_ROOT_PASSWORD}');
     FLUSH PRIVILEGES;
 EOF
 
@@ -31,6 +36,7 @@ FLUSH PRIVILEGES;
 EOF
 
     mysqladmin shutdown
+    sleep 2
 fi
 
 exec mysqld

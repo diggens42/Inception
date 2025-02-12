@@ -7,8 +7,11 @@ services:
     image: nginx
     depends_on:
       - wordpress
-    env_file:
-      - ../secrets/.env
+    environment:
+      WP_URL: https://localhost
+      WP_TITLE: Inception
+      WP_ADMIN_USER: admin
+      WP_ADMIN_EMAIL: abc@gmail.com
     ports:
       - "443:443"
       - "80:80"
@@ -25,8 +28,13 @@ services:
       dockerfile: Dockerfile
     container_name: mariadb
     image: mariadb
-    env_file:
-      - ../secrets/.env
+    environment:
+      DB_HOST: mariadb
+      DB_DATABASE: wordpress
+      DB_USER: wp_user
+    secrets:
+      - db_root_password
+      - db_user_password
     volumes:
       - ./data/mariadb_vol:/var/lib/mysql
     restart: on-failure
@@ -46,8 +54,17 @@ services:
     image: wordpress
     depends_on:
       - mariadb
-    env_file:
-      - ../secrets/.env
+    environment:
+      DB_HOST: mariadb
+      DB_DATABASE: wordpress
+      DB_USER: wp_user
+      WP_URL: https://localhost
+      WP_TITLE: Inception
+      WP_ADMIN_USER: wp_admin
+      WP_ADMIN_EMAIL: wp_admin@gmail.com
+    secrets:
+      - db_user_password
+      - wp_admin_password
     volumes:
       - ./data/wordpress_vol:/var/www/html
     restart: on-failure
@@ -59,6 +76,19 @@ services:
       start_period: 20s
     networks:
       - diggens
+
+secrets:
+  db_root_password:
+    file: ../secrets/db_root_password
+  db_user_password:
+    file: ../secrets/db_user_password
+  wp_admin_password:
+    file: ../secrets/wp_admin_password
+
+networks:
+  diggens:
+    name: diggens
+    driver: bridge
 
 # volumes:
 #     mariadb_vol:
@@ -75,8 +105,3 @@ services:
 #         type: none
 #         o: bind
 #         device: /Users/fwahl/code/Inception/data/wordpress
-
-networks:
-  diggens:
-    name: diggens
-    driver: bridge

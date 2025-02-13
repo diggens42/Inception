@@ -35,5 +35,8 @@ nginx:
 wordpress:
 	$(COMPOSE) up -d wordpress
 
+redis:
+	$(COMPOSE) up -d redis
+
 logs:
 	$(COMPOSE) logs

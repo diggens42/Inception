@@ -12,6 +12,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     php7.4-mbstring \
     php7.4-zip \
     php7.4-intl \
+    php7.4-redis \
+    redis-tools \
     mariadb-client \
     unzip \
     ca-certificates \

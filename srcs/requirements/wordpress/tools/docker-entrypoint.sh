@@ -15,6 +15,12 @@ if [ ! -f /var/www/html/wp-config.php ]; then
     wp config create --dbname="${DB_DATABASE}" --dbuser="${DB_USER}" --dbpass="${DB_USER_PASSWORD}" --dbhost="${DB_HOST}" --allow-root
 
     echo "wp-config.php configured!"
+
+    echo "Configuring Redis cache..."
+    echo "define('WP_REDIS_HOST', '${REDIS_HOST}');" >> /var/www/html/wp-config.php
+    echo "define('WP_REDIS_PORT', ${REDIS_PORT});" >> /var/www/html/wp-config.php
+    echo "define('WP_CACHE', true);" >> /var/www/html/wp-config.php
+    echo "define('WP_REDIS_DATABASE', 0);" >> /var/www/html/wp-config.php
 fi
 
 if ! wp core is-installed --allow-root; then
@@ -25,5 +31,12 @@ if ! wp core is-installed --allow-root; then
 else
     echo "WordPress already installed. Skipping installation."
 fi
+
+if ! wp plugin list --path=/var/www/html --format=csv | grep -q "redis-cache"; then
+    echo "Installing Redis Object Cache plugin..."
+    wp plugin install redis-cache --activate --allow-root --path=/var/www/html
+fi
+
+wp redis enable --allow-root --path=/var/www/html
 
 exec "$@"

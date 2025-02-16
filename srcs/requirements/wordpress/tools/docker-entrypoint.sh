@@ -12,15 +12,15 @@ if [ ! -f /var/www/html/wp-config.php ]; then
     echo "Creating wp-config.php from WP-CLI..."
     while [ ! -f /run/secrets/db_user_password ]; do sleep 1; done
     DB_USER_PASSWORD=$(cat /run/secrets/db_user_password | tr -d '\n\r')
-    wp config create --dbname="${DB_DATABASE}" --dbuser="${DB_USER}" --dbpass="${DB_USER_PASSWORD}" --dbhost="${DB_HOST}" --allow-root
+wp config create --dbname="${DB_DATABASE}" --dbuser="${DB_USER}" --dbpass="${DB_USER_PASSWORD}" --dbhost="${DB_HOST}" --allow-root \
+    --extra-php <<PHP
+define('WP_REDIS_CLIENT', 'phpredis');
+define('WP_REDIS_HOST', '${REDIS_HOST}');
+define('WP_REDIS_PORT', ${REDIS_PORT});
+define('WP_CACHE', true);
+PHP
 
-    echo "wp-config.php configured!"
-
-    echo "Configuring Redis cache..."
-    echo "define('WP_REDIS_HOST', '${REDIS_HOST}');" >> /var/www/html/wp-config.php
-    echo "define('WP_REDIS_PORT', ${REDIS_PORT});" >> /var/www/html/wp-config.php
-    echo "define('WP_CACHE', true);" >> /var/www/html/wp-config.php
-    echo "define('WP_REDIS_DATABASE', 0);" >> /var/www/html/wp-config.php
+    # echo "define('WP_REDIS_DATABASE', 0);" >> /var/www/html/wp-config.php
 fi
 
 if ! wp core is-installed --allow-root; then

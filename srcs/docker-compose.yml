@@ -115,6 +115,19 @@ services:
     networks:
       - diggens
 
+  portfolio:
+    build: ./requirements/bonus/portfolio
+    container_name: portfolio
+    restart: on-failure
+    ports:
+      - "9002:9002"
+    networks:
+      - diggens
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./data/portfolio_vol:/app
+
 secrets:
   db_root_password:
     file: ../secrets/db_root_password

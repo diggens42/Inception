@@ -38,5 +38,10 @@ wordpress:
 redis:
 	$(COMPOSE) up -d redis
 
+portfolio:
+	$(COMPOSE) up -d --build portfolio
+
 logs:
 	$(COMPOSE) logs
+
+.PHONY: portfolio

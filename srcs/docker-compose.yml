@@ -16,7 +16,7 @@ services:
       - "443:443"
     volumes:
       - ./data/wordpress_vol:/var/www/html
-      - ./data/portfolio_vol:/var/www/html/portfolio
+      - ./requirements/bonus/portfolio/tools:/var/www/html/portfolio
       - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
     restart: on-failure
     networks:
@@ -121,14 +121,16 @@ services:
     container_name: portfolio
     image: portfolio
     volumes:
-      - ./data/portfolio_vol:/var/www/html/portfolio
+      - ./requirements/bonus/portfolio/tools:/var/www/html/portfolio
+    # ports:
+    #   - "9002:9002"
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9002"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:9002"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 10s
     networks:
       - diggens
 

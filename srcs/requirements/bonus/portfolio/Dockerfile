@@ -1,8 +1,7 @@
 FROM debian:bullseye-slim
 
-RUN mkdir -p /var/www/html
+RUN apt-get update && \
+    apt-get install -y inotify-tools && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY ./tools /var/www/html/portfolio
-
-RUN chown -R www-data:www-data /var/www/html/portfolio && \
-    chmod -R 755 /var/www/html/portfolio
+CMD ["inotifywait", "-m", "-r", "-q", "-e", "create,modify,attrib", "/var/www/html/portfolio"]

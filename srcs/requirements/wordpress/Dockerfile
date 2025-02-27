@@ -33,7 +33,13 @@ RUN chown -R www-data:www-data /var/www/html && \
 
 RUN mkdir -p /run/php
 
-# EXPOSE 9000
+RUN mkdir -p /var/www/html/portfolio
+
+COPY portfolio/portfolio.html /var/www/html/portfolio/
+COPY portfolio/styles.css /var/www/html/portfolio/
+
+RUN chown -R www-data:www-data /var/www/html/portfolio && \
+    chmod -R 755 /var/www/html/portfolio
 
 WORKDIR /var/www/html
 

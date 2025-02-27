@@ -1,7 +1,12 @@
 NAME = inception
 COMPOSE = docker compose -f srcs/docker-compose.yml
 
+DATA_DIRS = ${HOME}/data/mariadb_vol ${HOME}/data/wordpress_vol
+
 up:
+	@echo "Creating necessary directories..."
+	@mkdir -p $(DATA_DIRS)
+	@echo "Starting containers..."
 	$(COMPOSE) up --build -d
 
 down:
@@ -22,7 +27,8 @@ clean:
 	docker system prune -af --volumes
 
 fclean: clean
-	rm -rf srcs/data
+	@echo "Removing data directories..."
+	@rm -rf srcs/data
 
 re: clean up
 

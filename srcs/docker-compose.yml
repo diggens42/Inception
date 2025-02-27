@@ -8,17 +8,17 @@ services:
     depends_on:
       - wordpress
     environment:
-      WP_URL: https://localhost
-      WP_TITLE: Inception
-      WP_ADMIN_USER: admin
-      WP_ADMIN_EMAIL: abc@gmail.com
+      WP_URL: ${WP_URL}
+      WP_TITLE: ${WP_TITLE}
+      WP_ADMIN_USER: ${WP_ADMIN_USER}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
     ports:
       - "443:443"
     volumes:
-      - ./data/wordpress_vol:/var/www/html
-      - ./requirements/bonus/portfolio/tools:/var/www/html/portfolio
+      - wordpress_vol:/var/www/html
       - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-      - ./data/hugo_vol:/var/www/html/hugo
+      # - ./requirements/bonus/portfolio/tools:/var/www/html/portfolio
+      # - ./data/hugo_vol:/var/www/html/hugo
     restart: on-failure
     networks:
       - diggens
@@ -30,14 +30,14 @@ services:
     container_name: mariadb
     image: mariadb
     environment:
-      DB_HOST: mariadb
-      DB_DATABASE: wordpress
-      DB_USER: wp_user
+      DB_HOST: ${DB_HOST}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
     secrets:
       - db_root_password
       - db_user_password
     volumes:
-      - ./data/mariadb_vol:/var/lib/mysql
+      - mariadb_vol:/var/lib/mysql
     restart: on-failure
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password", "--silent"]
@@ -57,20 +57,20 @@ services:
       - mariadb
       - redis
     environment:
-      DB_HOST: mariadb
-      DB_DATABASE: wordpress
-      DB_USER: wp_user
-      WP_URL: https://localhost
-      WP_TITLE: Inception
-      WP_ADMIN_USER: wp_admin
-      WP_ADMIN_EMAIL: wp_admin@gmail.com
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      DB_HOST: ${DB_HOST}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      WP_URL: ${WP_URL}
+      WP_TITLE: ${WP_TITLE}
+      WP_ADMIN_USER: ${WP_ADMIN_USER}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL_WP}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
     secrets:
       - db_user_password
       - wp_admin_password
     volumes:
-      - ./data/wordpress_vol:/var/www/html
+      - wordpress_vol:/var/www/html
     restart: on-failure
     healthcheck:
       test: ["CMD", "pgrep", "-x", "php-fpm7.4"]
@@ -111,25 +111,17 @@ services:
     networks:
       - diggens
 
-  portfolio:
-    build:
-     context: ./requirements/bonus/portfolio
-     dockerfile: Dockerfile
-    container_name: portfolio
-    image: portfolio
-    volumes:
-      - ./requirements/bonus/portfolio/tools:/var/www/html/portfolio
-    # ports:
-    #   - "9002:9002"
-    restart: on-failure
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:9002"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
-    #   start_period: 10s
-    networks:
-      - diggens
+  # portfolio:
+  #   build:
+  #    context: ./requirements/bonus/portfolio
+  #    dockerfile: Dockerfile
+  #   container_name: portfolio
+  #   image: portfolio
+  #   volumes:
+  #     - ./requirements/bonus/portfolio/tools:/var/www/html/portfolio
+  #   restart: on-failure
+  #   networks:
+  #     - diggens
 
   # hugo:
   #   build:
@@ -156,18 +148,25 @@ secrets:
   wp_admin_password:
     file: ../secrets/wp_admin_password
 
-# volumes:
-#     mariadb_vol:
-#       name: mariadb_vol
-#       driver: local
-#       driver_opts:
-#         type: none
-#         o: bind
-#         device: /Users/fwahl/code/Inception/data/maria_db
-#     wordpress_vol:
-#       name: wordpress_vol
-#       driver: local
-#       driver_opts:
-#         type: none
-#         o: bind
-#         device: /Users/fwahl/code/Inception/data/wordpress
+volumes:
+    mariadb_vol:
+      name: mariadb_vol
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ${HOME}/data/mariadb_vol
+    wordpress_vol:
+      name: wordpress_vol
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ${HOME}/data/wordpress_vol
+    # portfolio_vol:
+    #   name: wordpress_vol
+    #   driver: local
+    #   driver_opts:
+    #     type: none
+    #     o: bind
+    #     device: ${HOME}/data/wordpress

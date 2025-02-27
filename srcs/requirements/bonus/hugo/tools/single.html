@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>{{ .Title }}</h1>
+                <p class="age">31 years young</p>
+                <h2>Full-Stack Developer & Tech Enthusiast</h2>
+            </div>
+        </header>
+
+        <section class="about">
+            <h3>Crafting Digital Excellence</h3>
+            <p>{{ .Content }}</p>
+        </section>
+
+        <section class="social">
+            <a href="https://github.com/diggens42" target="_blank" class="github-btn">
+                <i class="fab fa-github"></i> GitHub Portfolio
+            </a>
+        </section>
+
+        <section class="contact">
+            <h3>Let's Connect</h3>
+            <p>📧 <a href="mailto:your.email@example.com">your.email@example.com</a></p>
+        </section>
+    </div>
+</body>
+</html>

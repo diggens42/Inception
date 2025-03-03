@@ -17,8 +17,6 @@ services:
     volumes:
       - wordpress_vol:/var/www/html
       - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-      # - ./requirements/bonus/portfolio/tools:/var/www/html/portfolio
-      # - ./data/hugo_vol:/var/www/html/hugo
     restart: on-failure
     networks:
       - diggens
@@ -111,30 +109,6 @@ services:
     networks:
       - diggens
 
-  # portfolio:
-  #   build:
-  #    context: ./requirements/bonus/portfolio
-  #    dockerfile: Dockerfile
-  #   container_name: portfolio
-  #   image: portfolio
-  #   volumes:
-  #     - ./requirements/bonus/portfolio/tools:/var/www/html/portfolio
-  #   restart: on-failure
-  #   networks:
-  #     - diggens
-
-  # hugo:
-  #   build:
-  #    context: ./requirements/bonus/hugo
-  #    dockerfile: Dockerfile
-  #   container_name: hugo
-  #   image: hugo
-  #   volumes:
-  #     - ./data/hugo_vol:/var/www/html/hugo
-  #   restart: on-failure
-  #   networks:
-  #     - diggens
-
 networks:
   diggens:
     name: diggens
@@ -163,10 +137,4 @@ volumes:
         type: none
         o: bind
         device: ${HOME}/data/wordpress_vol
-    # portfolio_vol:
-    #   name: wordpress_vol
-    #   driver: local
-    #   driver_opts:
-    #     type: none
-    #     o: bind
-    #     device: ${HOME}/data/wordpress
+

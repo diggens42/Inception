@@ -109,6 +109,27 @@ services:
     networks:
       - diggens
 
+  ftp:
+    build:
+      context: ./requirements/bonus/ftp
+      dockerfile: Dockerfile
+    container_name: ftp
+    image: ftp
+    depends_on:
+      - wordpress
+    environment:
+      FTP_USER: ${FTP_USER:-ftpuser}
+    ports:
+      - "21:21"
+      - "30000-30009:30000-30009"
+    secrets:
+      - ftp_password
+    volumes:
+      - wordpress_vol:/var/www/html
+    networks:
+      - diggens
+    restart: on-failure
+
 networks:
   diggens:
     name: diggens
@@ -121,6 +142,8 @@ secrets:
     file: ../secrets/db_user_password
   wp_admin_password:
     file: ../secrets/wp_admin_password
+  ftp_password:
+    file: ../secrets/ftp_password
 
 volumes:
     mariadb_vol:

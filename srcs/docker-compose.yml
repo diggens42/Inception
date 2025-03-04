@@ -130,6 +130,19 @@ services:
       - diggens
     restart: on-failure
 
+  portainer:
+    build:
+      context: ./requirements/bonus/portainer
+      dockerfile: Dockerfile
+    container_name: portainer
+    image: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_vol:/data
+    restart: on-failure
+    networks:
+      - diggens
+
 networks:
   diggens:
     name: diggens
@@ -160,4 +173,11 @@ volumes:
         type: none
         o: bind
         device: ${HOME}/data/wordpress_vol
+    portainer_vol:
+      name: portainer_vol
+      driver: local
+      driver_opts:
+        type: none
+        o: bind
+        device: ${HOME}/data/portainer_vol
 

@@ -1,7 +1,7 @@
 NAME = inception
 COMPOSE = docker compose -f srcs/docker-compose.yml
 
-DATA_DIRS = ${HOME}/data/mariadb_vol ${HOME}/data/wordpress_vol
+DATA_DIRS = ${HOME}/data/mariadb_vol ${HOME}/data/wordpress_vol ${HOME}/data/portainer_vol
 
 up:
 	@echo "Creating necessary directories..."

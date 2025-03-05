@@ -136,12 +136,14 @@ services:
       dockerfile: Dockerfile
     container_name: portainer
     image: portainer
-    ports:
-      - "9000:9000"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_vol:/data
+    environment:
+      PORTAINER_USER: ${PORTAINER_USER}
     restart: on-failure
+    secrets:
+      - portainer_password
     networks:
       - diggens
 
@@ -159,6 +161,8 @@ secrets:
     file: ../secrets/wp_admin_password
   ftp_password:
     file: ../secrets/ftp_password
+  portainer_password:
+    file: ../secrets/portainer_password
 
 volumes:
     mariadb_vol:

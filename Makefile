@@ -28,7 +28,7 @@ clean:
 
 fclean: clean
 	@echo "Removing data directories..."
-	@rm -rf srcs/data
+	@rm -rf $(DATA_DIRS)
 
 re: clean up
 

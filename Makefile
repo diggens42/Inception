@@ -29,6 +29,7 @@ clean:
 fclean: clean
 	@echo "Removing data directories..."
 	@rm -rf $(DATA_DIRS)
+	@osascript -e 'quit app "Docker"' && open -a Docker
 
 re: clean up
 

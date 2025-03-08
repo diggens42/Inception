@@ -1,6 +1,5 @@
 FROM debian:bullseye-slim
 
-
 RUN apt-get update && \
     apt-get install -y mariadb-server coreutils tini && \
     apt-get clean && \
@@ -12,12 +11,8 @@ COPY tools/docker-entrypoint.sh /docker-entrypoint-initdb.d/docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint-initdb.d/docker-entrypoint.sh
 RUN mkdir -p /run/mysqld && chown mysql:mysql /run/mysqld
 
-# EXPOSE 3306
-
 VOLUME ["/var/lib/mysql"]
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
 CMD ["/docker-entrypoint-initdb.d/docker-entrypoint.sh"]
-
-

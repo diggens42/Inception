@@ -139,8 +139,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_vol:/data
-    environment:
-      PORTAINER_USER: ${PORTAINER_USER}
     restart: on-failure
     secrets:
       - portainer_password

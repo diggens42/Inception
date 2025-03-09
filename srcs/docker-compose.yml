@@ -62,11 +62,15 @@ services:
       WP_TITLE: ${WP_TITLE}
       WP_ADMIN_USER: ${WP_ADMIN_USER}
       WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL_WP}
+      WP_NORMAL_USER: ${WP_NORMAL_USER}
+      WP_USER_EMAIL: ${WP_USER_EMAIL}
+      WP_USER_ROLE: ${WP_USER_ROLE}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PORT: ${REDIS_PORT}
     secrets:
       - db_user_password
       - wp_admin_password
+      - wp_user_password
     volumes:
       - wordpress_vol:/var/www/html
     restart: on-failure
@@ -157,6 +161,8 @@ secrets:
     file: ../secrets/db_user_password
   wp_admin_password:
     file: ../secrets/wp_admin_password
+  wp_user_password:
+    file: ../secrets/wp_user_password
   ftp_password:
     file: ../secrets/ftp_password
   portainer_password:

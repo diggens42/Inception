@@ -20,7 +20,6 @@ define('WP_REDIS_PORT', ${REDIS_PORT});
 define('WP_CACHE', true);
 PHP
 
-    # echo "define('WP_REDIS_DATABASE', 0);" >> /var/www/html/wp-config.php
 fi
 
 if ! wp core is-installed --allow-root; then
@@ -32,11 +31,26 @@ else
     echo "WordPress already installed. Skipping installation."
 fi
 
+if ! wp user list --field=user_login --allow-root | grep -q "^${WP_NORMAL_USER}$"; then
+    echo "Creating additional WordPress user..."
+    while [ ! -f /run/secrets/wp_user_password ]; do sleep 1; done
+    WP_USER_PASSWORD=$(cat /run/secrets/wp_secondary_password | tr -d '\n\r')
+
+    wp user create "${WP_NORMAL_USER}" "${WP_USER_EMAIL}" \
+        --user_pass="${WP_USER_PASSWORD}" \
+        --role="${WP_USER_ROLE}" \
+        --allow-root
+else
+    echo "Secondary WordPress user '${WP_NORMAL_USER}' already exists. Skipping creation."
+fi
+
+
 if ! wp plugin list --path=/var/www/html --format=csv | grep -q "redis-cache"; then
     echo "Installing Redis Object Cache plugin..."
     wp plugin install redis-cache --activate --allow-root --path=/var/www/html
 fi
 
 wp redis enable --allow-root --path=/var/www/html
+wp theme activate twentytwentyfour --allow-root
 
 exec "$@"

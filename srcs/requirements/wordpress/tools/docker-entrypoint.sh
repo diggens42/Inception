@@ -36,7 +36,7 @@ fi
 if ! wp user list --field=user_login --allow-root | grep -q "^${WP_NORMAL_USER}$"; then
     echo "Creating additional WordPress user..."
     while [ ! -f /run/secrets/wp_user_password ]; do sleep 1; done
-    WP_USER_PASSWORD=$(cat /run/secrets/wp_secondary_password | tr -d '\n\r')
+    WP_USER_PASSWORD=$(cat /run/secrets/wp_user_password | tr -d '\n\r')
 
     wp user create "${WP_NORMAL_USER}" "${WP_USER_EMAIL}" \
         --user_pass="${WP_USER_PASSWORD}" \

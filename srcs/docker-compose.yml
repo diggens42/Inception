@@ -15,137 +15,147 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wordpress_vol:/var/www/html
+      # - wordpress_vol:/var/www/html
       - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
     restart: on-failure
     networks:
       - diggens
 
-  mariadb:
-    build:
-      context: ./requirements/mariadb
-      dockerfile: Dockerfile
-    container_name: mariadb
-    image: mariadb
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USER: ${DB_USER}
-    secrets:
-      - db_root_password
-      - db_user_password
-    volumes:
-      - mariadb_vol:/var/lib/mysql
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password", "--silent"]
-      interval: 30s
-      retries: 3
-      timeout: 10s
-    networks:
-      - diggens
+  # mariadb:
+  #   build:
+  #     context: ./requirements/mariadb
+  #     dockerfile: Dockerfile
+  #   container_name: mariadb
+  #   image: mariadb
+  #   environment:
+  #     DB_HOST: ${DB_HOST}
+  #     DB_DATABASE: ${DB_DATABASE}
+  #     DB_USER: ${DB_USER}
+  #   secrets:
+  #     - db_root_password
+  #     - db_user_password
+  #   volumes:
+  #     - mariadb_vol:/var/lib/mysql
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password", "--silent"]
+  #     interval: 30s
+  #     retries: 3
+  #     timeout: 10s
+  #   networks:
+  #     - diggens
 
-  wordpress:
-    build:
-      context: ./requirements/wordpress
-      dockerfile: Dockerfile
-    container_name: wordpress
-    image: wordpress
-    depends_on:
-      - mariadb
-      - redis
-    environment:
-      DB_HOST: ${DB_HOST}
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USER: ${DB_USER}
-      WP_URL: ${WP_URL}
-      WP_TITLE: ${WP_TITLE}
-      WP_ADMIN_USER: ${WP_ADMIN_USER}
-      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL_WP}
-      WP_NORMAL_USER: ${WP_NORMAL_USER}
-      WP_USER_EMAIL: ${WP_USER_EMAIL}
-      WP_USER_ROLE: ${WP_USER_ROLE}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-    secrets:
-      - db_user_password
-      - wp_admin_password
-      - wp_user_password
-    volumes:
-      - wordpress_vol:/var/www/html
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "pgrep", "-x", "php-fpm7.4"]
-      interval: 33s
-      retries: 5
-      timeout: 10s
-      start_period: 20s
-    networks:
-      - diggens
+  # wordpress:
+  #   build:
+  #     context: ./requirements/wordpress
+  #     dockerfile: Dockerfile
+  #   container_name: wordpress
+  #   image: wordpress
+  #   depends_on:
+  #     - mariadb
+  #     - redis
+  #   environment:
+  #     DB_HOST: ${DB_HOST}
+  #     DB_DATABASE: ${DB_DATABASE}
+  #     DB_USER: ${DB_USER}
+  #     WP_URL: ${WP_URL}
+  #     WP_TITLE: ${WP_TITLE}
+  #     WP_ADMIN_USER: ${WP_ADMIN_USER}
+  #     WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL_WP}
+  #     WP_NORMAL_USER: ${WP_NORMAL_USER}
+  #     WP_USER_EMAIL: ${WP_USER_EMAIL}
+  #     WP_USER_ROLE: ${WP_USER_ROLE}
+  #     REDIS_HOST: ${REDIS_HOST}
+  #     REDIS_PORT: ${REDIS_PORT}
+  #   secrets:
+  #     - db_user_password
+  #     - wp_admin_password
+  #     - wp_user_password
+  #   volumes:
+  #     - wordpress_vol:/var/www/html
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "pgrep", "-x", "php-fpm7.4"]
+  #     interval: 33s
+  #     retries: 5
+  #     timeout: 10s
+  #     start_period: 20s
+  #   networks:
+  #     - diggens
 
-  redis:
-    build:
-      context: ./requirements/bonus/redis
-      dockerfile: Dockerfile
-    container_name: redis
-    image: redis
-    restart: on-failure
-    networks:
-      - diggens
+  # redis:
+  #   build:
+  #     context: ./requirements/bonus/redis
+  #     dockerfile: Dockerfile
+  #   container_name: redis
+  #   image: redis
+  #   restart: on-failure
+  #   networks:
+  #     - diggens
 
-  adminer:
-    build:
-     context: ./requirements/bonus/adminer
-     dockerfile: Dockerfile
-    container_name: adminer
-    image: adminer
-    depends_on:
-      - mariadb
-    ports:
-      - "9001:9001"
-    restart: on-failure
-    healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider http://localhost:9001 || exit 1"]
-      interval: 30s
-      retries: 3
-      timeout: 10s
-      start_period: 20s
-    networks:
-      - diggens
+  # adminer:
+  #   build:
+  #    context: ./requirements/bonus/adminer
+  #    dockerfile: Dockerfile
+  #   container_name: adminer
+  #   image: adminer
+  #   depends_on:
+  #     - mariadb
+  #   ports:
+  #     - "9001:9001"
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "wget -q --spider http://localhost:9001 || exit 1"]
+  #     interval: 30s
+  #     retries: 3
+  #     timeout: 10s
+  #     start_period: 20s
+  #   networks:
+  #     - diggens
 
-  ftp:
-    build:
-      context: ./requirements/bonus/ftp
-      dockerfile: Dockerfile
-    container_name: ftp
-    image: ftp
-    depends_on:
-      - wordpress
-    environment:
-      FTP_USER: ${FTP_USER:-ftpuser}
-    ports:
-      - "21:21"
-      - "30000-30009:30000-30009"
-    secrets:
-      - ftp_password
-    volumes:
-      - wordpress_vol:/var/www/html
-    networks:
-      - diggens
-    restart: on-failure
+  # ftp:
+  #   build:
+  #     context: ./requirements/bonus/ftp
+  #     dockerfile: Dockerfile
+  #   container_name: ftp
+  #   image: ftp
+  #   depends_on:
+  #     - wordpress
+  #   environment:
+  #     FTP_USER: ${FTP_USER:-ftpuser}
+  #   ports:
+  #     - "21:21"
+  #     - "30000-30009:30000-30009"
+  #   secrets:
+  #     - ftp_password
+  #   volumes:
+  #     - wordpress_vol:/var/www/html
+  #   networks:
+  #     - diggens
+  #   restart: on-failure
 
-  portainer:
+  # portainer:
+  #   build:
+  #     context: ./requirements/bonus/portainer
+  #     dockerfile: Dockerfile
+  #   container_name: portainer
+  #   image: portainer
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - portainer_vol:/data
+  #   restart: on-failure
+  #   secrets:
+  #     - portainer_password
+  #   networks:
+  #     - diggens
+
+  portfolio:
     build:
-      context: ./requirements/bonus/portainer
+      context: ./requirements/bonus/portfolio
       dockerfile: Dockerfile
-    container_name: portainer
-    image: portainer
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_vol:/data
+    container_name: portfolio
+    image: portfolio
     restart: on-failure
-    secrets:
-      - portainer_password
     networks:
       - diggens
 

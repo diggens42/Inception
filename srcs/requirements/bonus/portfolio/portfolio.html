@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freddie - Software Developer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #e6e6e6;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2a2a72 0%, #009ffd 100%);
+            padding: 80px 0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .header-content h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .age {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        header h2 {
+            font-size: 1.8em;
+            font-weight: 300;
+        }
+
+        .about {
+            background: #2d2d2d;
+            padding: 40px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h3 {
+            color: #009ffd;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+        }
+
+        .skills {
+            margin: 30px 0;
+            padding: 20px;
+            background: #252525;
+            border-radius: 10px;
+        }
+
+        .skills ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .skills li {
+            padding: 12px;
+            background: #009ffd;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .social {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 30px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .github-btn:hover {
+            transform: translateY(-3px);
+            background: #444;
+        }
+
+        .github-btn i {
+            margin-right: 10px;
+        }
+
+        .contact {
+            text-align: center;
+            padding: 40px;
+            background: #252525;
+            border-radius: 15px;
+            margin-bottom: 50px;
+        }
+
+        .contact a {
+            color: #009ffd;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .contact a:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.5em;
+            }
+
+            .about {
+                padding: 25px;
+            }
+
+            .skills ul {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Freddie Smith</h1>
+                <p class="age">31 years young</p>
+                <h2>Full-Stack Developer & Tech Enthusiast</h2>
+            </div>
+        </header>
+
+        <section class="about">
+            <h3>Crafting Digital Excellence</h3>
+            <p>With 5+ years of experience in the tech industry, I transform complex problems into elegant, efficient solutions. Specializing in JavaScript ecosystems and cloud architectures, I bridge the gap between ideas and implementation.</p>
+
+            <div class="skills">
+                <h4>Core Competencies:</h4>
+                <ul>
+                    <li>Full-Stack Development</li>
+                    <li>Cloud-Native Solutions</li>
+                    <li>DevOps Practices</li>
+                    <li>System Architecture</li>
+                </ul>
+            </div>
+
+            <div class="social">
+                <a href="https://github.com/diggens42" target="_blank" class="github-btn">
+                    <i class="fab fa-github"></i> GitHub Portfolio
+                </a>
+            </div>
+        </section>
+
+        <section class="contact">
+            <h3>Let's Connect</h3>
+            <p>Ready to turn your vision into reality? Reach out and let's create something amazing.</p>
+            <p>📧 <a href="mailto:your.email@example.com">your.email@example.com</a></p>
+        </section>
+    </div>
+</body>
+</html>

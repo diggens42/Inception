@@ -101,8 +101,8 @@ services:
     image: adminer
     depends_on:
       - mariadb
-    ports:
-      - "9001:9001"
+    # ports:
+    #   - "9001:9001"
     restart: on-failure
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider http://localhost:9001 || exit 1"]

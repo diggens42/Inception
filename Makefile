@@ -31,6 +31,9 @@ fclean: clean
 	@rm -rf $(DATA_DIRS)
 	@osascript -e 'quit app "Docker"' && open -a Docker
 
+ls:
+	docker compose -f srcs/docker-compose.yml ps --all
+
 re: clean up
 
 mariadb:

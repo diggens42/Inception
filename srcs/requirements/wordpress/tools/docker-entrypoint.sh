@@ -20,6 +20,8 @@ define('WP_REDIS_PORT', ${REDIS_PORT});
 define('WP_CACHE', true);
 define('WP_REDIS_PATH', false);
 define('WP_REDIS_DISABLED', false);
+define('WP_HOME', '${WP_URL}');
+define('WP_SITEURL', '${WP_URL}');
 PHP
 
 fi

@@ -28,8 +28,7 @@ clean:
 
 fclean: clean
 	@echo "Removing data directories..."
-	@rm -rf $(DATA_DIRS)
-	@osascript -e 'quit app "Docker"' && open -a Docker
+	@sudo rm -rf $(DATA_DIRS)
 
 ls:
 	docker compose -f srcs/docker-compose.yml ps --all
